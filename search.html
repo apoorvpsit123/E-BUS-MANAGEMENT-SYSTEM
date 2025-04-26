@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Bus - Ebus Management</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Search Bus Location</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="register.html">Register</a>
+      <a href="login.html">Login</a>
+      <a href="search.html">Search Bus</a>
+    </nav>
+  </header>
+
+  <main>
+    <form id="busSearchForm" class="form-container">
+      <input type="text" id="source" placeholder="Source Location" required><br>
+      <input type="text" id="destination" placeholder="Destination Location" required><br>
+      <button type="submit" class="btn-primary">Search Bus</button>
+    </form>
+
+    <div id="searchResults" style="display:none;">
+      <h2>Available Buses:</h2>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Bus Number</th>
+            <th>Bus Type</th>
+            <th>Arrival Time</th>
+          </tr>
+        </thead>
+        <tbody id="resultTable"></tbody>
+      </table>
+    </div>
+  </main>
+
+<script>
+document.getElementById('busSearchForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  
+  const source = document.getElementById('source').value;
+  const destination = document.getElementById('destination').value;
+
+  if (source && destination) {
+    let searches = JSON.parse(localStorage.getItem('searches')) || [];
+    searches.push({ source, destination, time: new Date().toLocaleString() });
+    localStorage.setItem('searches', JSON.stringify(searches));
+
+    const buses = [
+      { number: "KA-05-1234", type: "AC Seater", arrival: "5 min" },
+      { number: "KA-07-5678", type: "Non-AC", arrival: "12 min" },
+      { number: "KA-09-9876", type: "AC Sleeper", arrival: "18 min" }
+    ];
+
+    const resultTable = document.getElementById('resultTable');
+    resultTable.innerHTML = '';
+
+    buses.forEach(bus => {
+      const row = `<tr>
+                    <td>${bus.number}</td>
+                    <td>${bus.type}</td>
+                    <td>${bus.arrival}</td>
+                   </tr>`;
+      resultTable.innerHTML += row;
+    });
+
+    document.getElementById('searchResults').style.display = 'block';
+  }
+});
+</script>
+
+</body>
+</html>
